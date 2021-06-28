@@ -1,66 +1,58 @@
-const FOLLOW = 'FOLLOW';
-const UNFOLLOW = 'UNFOLLOW';
-const SET_USERS = 'SET_USERS';
-const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
-const SET_TOTAL_USERS_COUNT = 'SET_TOTAL_USERS_COUNT';
-const TOGGLE_IS_FETCHINGS= 'TOGGLE_IS_FETCHINGS';
+import { authApi } from "../api/api";
+import { stopSubmit } from "redux-form";
+
+const SET_USER_DATA = 'authReducer/SET_USER_DATA';
 
 let initialState = {
-    users: [],
-    pageSize: 10,
-    totalUsersCount: 20,
-    currentPage: 1,
-    isFetching: false
+    id: null,
+    email: null,
+    login: null,
+    isAuth: false
 };
 
-const usersReducer = (state = initialState, action) => {
+const authReducer = (state = initialState, action) => {
 
     switch (action.type) {
-        case FOLLOW:
+        case SET_USER_DATA:
             return {
                 ...state,
-                users: state.users.map((u) => {
-                    if (u.id === action.userId) {
-                        return { ...u, isFollowed: true }
-                    }
-                    return u;
-                })
-            };
-        case UNFOLLOW:
-            return {
-                ...state,
-                users: state.users.map((u) => {
-                    if (u.id === action.userId) {
-                        return { ...u, isFollowed: false }
-                    }
-                    return u;
-                })
-            };
-        case SET_USERS:
-            return {
-                ...state, users: action.users
-            }
-        case SET_CURRENT_PAGE:
-            return {
-                ...state,
-                currentPage: action.currentPage
-            }
-        case SET_TOTAL_USERS_COUNT:
-            return { ...state, totalUsersCount: action.count }
-        case TOGGLE_IS_FETCHINGS:
-            return {
-                ...state, isFetching: action.isFetching
+                ...action.data,
             }
         default:
             return state;
     }
 };
+export const setAuthUserData = (id, email, login, isAuth) => ({ type: SET_USER_DATA, data: { id, email, login, isAuth } })
 
-export const follow = (userId) => ({ type: 'FOLLOW', userId });
-export const unFollow = (userId) => ({ type: 'UNFOLLOW', userId });
-export const setUsers = (users) => ({ type: 'SET_USERS', users });
-export const setCurrentPage = (currentPage) => ({ type: 'SET_CURRENT_PAGE', currentPage });
-export const setTotalUsersCount = (totalUsersCount) => ({ type: 'SET_TOTAL_USERS_COUNT', count: totalUsersCount })
-export const toggleIsFetching = (isFetching) => ({ type: 'TOGGLE_IS_FETCHINGS', isFetching})
+export const getAuthUserData = () => async (dispatch) => {
+    let response = await authApi.me()
 
-export default usersReducer;
+    if (response.data.resultCode === 0) {
+        let { id, email, login } = response.data.data;
+        dispatch(setAuthUserData(id, email, login, true));
+    }
+}
+
+export const login = (email, password, rememberMe) => async (dispatch) => {
+
+    let response = await authApi.login(email, password, rememberMe);
+
+    if (response.data.resultCode === 0) {
+        dispatch(getAuthUserData());
+    } else {
+        let message = response.data.messages.length > 0 ? response.data.messages[0] : 'some error'
+        dispatch(stopSubmit('login', { _error: message }))
+    }
+
+
+}
+
+export const logout = () => async (dispatch) => {
+
+    let response = await authApi.logout()
+    if (response.data.resultCode === 0) {
+        dispatch(setAuthUserData(null, null, null, false))
+    }
+}
+
+export default authReducer;

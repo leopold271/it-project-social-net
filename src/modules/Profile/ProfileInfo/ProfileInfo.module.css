@@ -1,8 +1,9 @@
-.content{
-    grid-area: c;
-    background-color: hotpink;
+.profileInfoBlock{
+    padding: 10px;
 }
 
-.item{
 
+.JobLooker{
+    height: 30px;
+    width: 60px;
 }

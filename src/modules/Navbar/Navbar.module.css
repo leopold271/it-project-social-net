@@ -1,0 +1,26 @@
+
+.navbar{
+    grid-area: n;
+    background-color: greenyellow;
+    padding: 20px;
+}
+
+.item a{
+    color: white;
+    text-decoration: none;
+}
+
+item a.activeLink{
+    color: gold;
+}
+
+.item:nth-child(5){
+    margin-top: 30px;
+}
+.item:nth-child(6){
+    margin-top: 40px;
+    font-size: 28px;
+    text-align: center;
+    display: table;
+}
+

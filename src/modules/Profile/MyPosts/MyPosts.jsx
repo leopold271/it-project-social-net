@@ -1,34 +1,58 @@
 import React from 'react';
-import foneimage from '../../../mountains-under-mist-morning-amazing-260nw-1725825019.webp';
-import ava from '../../../quad.png';
-import classes from './Profile.module.css';
+import classes from './MyPosts.module.css';
+import Post from "./Posts/Posts";
+import { Field, reduxForm } from "redux-form";
+import { maxLengthCreator, required } from "../../../utils/validators/validators";
+import { Textarea } from "../../Common/FormsControls/FormsControls";
 
-const Profile = () => {
-   return (
-      <div className={classes.content}>
-         <div>
-            <img src={foneimage} alt='phoneimage' />
-         </div>
-         <div>
-            <img className={classes.ava} src='https://static.mk.ru/upload/entities/2019/05/08/00/articles/detailPicture/c7/b5/08/6e/5dda626cb409b1fa6942c29040609e17.jpg' alt='ava' />
-            + description
-         </div>
-         <div>
-            My posts
+
+const maxLength10 = maxLengthCreator(10);
+
+const MyPostsForm = (props) => {
+    return (
+        <form onSubmit={props.handleSubmit}>
             <div>
-               new post
+                <button>add post</button>
             </div>
+
             <div>
-               <div>
-                  post 1
-               </div>
-               <div>
-                  post 2
-               </div>
+                <Field name={'newPostText'} placeholder={'add post'} component={Textarea} validate={[required, maxLength10]} />
             </div>
-         </div>
-      </div>
-   )
+        </form>
+    )
 }
 
-export default Profile;
+let MyPostsReduxForm = reduxForm({
+    form: 'postText'
+})(MyPostsForm);
+
+const MyPosts =  React.memo((props) => {
+
+    console.log('render yo');
+
+    let PostsDataNew = props.PostsData.map((p) => <Post postText={p.text} likeCounter={p.likeCounter} />)
+
+    /*   let onAddPost = () => {
+           props.addPost();
+       };*/
+
+    let addPosts = (values) => {
+        props.addPost(values.newPostText);
+    }
+
+    return (
+        <div>
+            <h3>My posts</h3>
+            <div className={classes.postBlock}>
+                <MyPostsReduxForm onSubmit={addPosts} />
+            </div>
+            <div className={classes.post}>
+                {PostsDataNew}
+            </div>
+        </div>
+
+    )
+
+})
+
+export default MyPosts;

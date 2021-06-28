@@ -1,9 +1,18 @@
-import React from "react";
+formControl {
 
-export const Textarea = ({input, meta, ...props}) => {
-    return (
-        <div>
-            <textarea {...input} {...props}/>
-        </div>
-    )
+}
+
+.formControl.error input,
+.formControl.error textarea {
+    border: solid darkred 5px;
+}
+
+.formControl.error span {
+    color: red;
+}
+
+.formSummaryError{
+    border: solid red 2px;
+    padding: 5px;
+    color: darkseagreen;
 }

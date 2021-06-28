@@ -1,8 +1,7 @@
-.content{
-    grid-area: c;
-    background-color: hotpink;
+.postBlock{
+    padding: 10px;
 }
 
-.ava{
-    width: 60px;
+.post{
+    margin-top: 10px;
 }

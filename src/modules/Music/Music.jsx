@@ -1,12 +1,12 @@
 import React from 'react';
-import classes from './News.module.css';
+import classes from './Music.module.css';
 
-const News = () => {
+const Music = () => {
    return (
        <div>
-           News
+           Music
        </div>
    )
 }
 
-export default News;
+export default Music;

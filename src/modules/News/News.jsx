@@ -1,12 +1,12 @@
 import React from 'react';
-import classes from './Dialogs.module.css';
+import classes from './News.module.css';
 
-const Dialogs = () => {
+const News = () => {
    return (
        <div>
-           Dialogs
+           News
        </div>
    )
 }
 
-export default Dialogs;
+export default News;
